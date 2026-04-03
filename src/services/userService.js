@@ -1,7 +1,7 @@
-import { query } from "../config/db.js";
+import  pool  from "../config/db.js";
 
 export const createUser = async ({ name, email, password_hash, role, roll_number, branch }) => {
-    const results = await query(
+    const results = await pool.query(
         `INSERT INTO users (name, email, password_hash, role, roll_number, branch)
         VALUES ($1, $2, $3, $4, $5, $6) RETURNING *`,
         [name, email, password_hash, role, roll_number,branch]
@@ -11,7 +11,7 @@ export const createUser = async ({ name, email, password_hash, role, roll_number
 };
 
 export const getuserByEmail = async (email) => {
-    const result = await query (
+    const result = await pool.query (
         `SELECT * FROM users WHERE email= $1`,
         [email]
     );
@@ -21,8 +21,8 @@ export const getuserByEmail = async (email) => {
 
 
 export const getUserById = async (id) => {
-    const result = await query(
-        `SELECT id, name, email, role, roll_number, branch FROM user WHERE id=$1`,
+    const result = await pool.query(
+        `SELECT id, name, email, role, roll_number, branch FROM users WHERE id=$1`,
         [id]
     );
 

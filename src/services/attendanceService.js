@@ -1,8 +1,8 @@
-import { query } from "../config/db.js";
+import pool from "../config/db.js";
 
 
 export const createSession = async ({ course_id, created_by, start_time, end_time, network_ssid }) => {
-  const result = await query(
+  const result = await pool.query(
     `INSERT INTO attendance_sessions (course_id, created_by, start_time, end_time, network_ssid)
      VALUES ($1, $2, $3, $4, $5)
      RETURNING *`,
@@ -15,7 +15,7 @@ export const createSession = async ({ course_id, created_by, start_time, end_tim
 
 
 export const markAttendance = async (session_id, student_id) => {
-  const result = await query(
+  const result = await pool.query(
     `INSERT INTO attendance_records (session_id, student_id)
      VALUES ($1, $2)
      RETURNING *`,
@@ -28,7 +28,7 @@ export const markAttendance = async (session_id, student_id) => {
 
 
 export const getStudentAttendance = async (student_id) => {
-  const result = await query(
+  const result = await pool.query(
     `SELECT c.course_name, COUNT(ar.id) as attended
      FROM courses c
      JOIN enrollments e ON c.id = e.course_id
